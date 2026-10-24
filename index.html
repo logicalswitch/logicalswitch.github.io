@@ -1,1 +1,556 @@
-welcome! :D
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Logical Switch | Electricity, home automation and IT</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<meta name="description" content="Logical Switch: electrical installation and home automation in and around Brussels, plus software and IT solutions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap">
+<style>
+/* Layout: header, hero with push button, services in columns, contact, footer. Dark until the button is pressed. */
+:root{
+  --bg:#0B0D10;
+  --surface:#14171C;
+  --line:#252A31;
+  --fg:#C3C8CF;
+  --fg-strong:#F1F2F4;
+  --muted:#868E98;
+  --accent:#F0A84A;
+  --btn-bg:#F1F2F4;
+  --btn-fg:#0B0D10;
+  --plate:#1A1E24;
+  --plate-edge:#2A3038;
+  --rocker:#20252C;
+  --rocker-hi:#2A3037;
+  --glow:rgba(240,168,74,0);
+  --font:"Open Sans Variable","Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:dark;
+}
+:root[data-light="on"]{
+  --bg:#FFFFFF;
+  --surface:#F5F6F7;
+  --line:#E3E5E8;
+  --fg:#3D434B;
+  --fg-strong:#111418;
+  --muted:#6B727C;
+  --accent:#C27A16;
+  --btn-bg:#F0A84A;
+  --btn-fg:#111418;
+  --plate:#FAFAFA;
+  --plate-edge:#DADDE1;
+  --rocker:#FFFFFF;
+  --rocker-hi:#F1F2F4;
+  --glow:rgba(255,200,120,.32);
+  color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--fg);
+  font:400 1rem/1.65 var(--font);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  transition:background-color .5s var(--ease), color .5s var(--ease);
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+html.vt-off::view-transition-old(root){z-index:2}
+html.vt-off::view-transition-new(root){z-index:1}
+
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:24px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg-strong);font:700 1.05rem/1 var(--font);letter-spacing:-.01em}
+.brand-mark{display:grid;place-items:center;width:30px;height:30px;border:1.5px solid currentColor;border-radius:7px;font:600 .7rem/1 var(--font);letter-spacing:.02em}
+nav{display:flex;gap:28px;font-size:.95rem}
+nav a{text-decoration:none;color:var(--fg);transition:color .2s}
+nav a:hover{color:var(--fg-strong)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:center;gap:48px;padding-block:64px 96px}
+h1{font:700 clamp(2.2rem, 5vw, 3.8rem)/1.1 var(--font);letter-spacing:-.025em;color:var(--fg-strong);margin:0 0 20px;text-wrap:balance}
+h1 .state{display:block}
+h1 .state[hidden]{display:none!important}
+.lede{max-width:34em;font-size:1.08rem;font-weight:300;line-height:1.7;color:var(--muted);margin:0}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:32px}
+.btn{display:inline-block;text-decoration:none;background:var(--btn-bg);color:var(--btn-fg);font:600 .95rem/1 var(--font);padding:14px 22px;border-radius:6px;transition:background .5s, color .5s, opacity .2s}
+.btn:hover{opacity:.88}
+.hint{margin:0;font-size:.92rem;color:var(--muted)}
+
+/* Push button */
+.switch-zone{display:flex;flex-direction:column;align-items:center;gap:20px;position:relative}
+.switch-zone .hint{text-align:center;position:relative}
+.switch-zone::before{content:"";position:absolute;inset:-60px;border-radius:50%;background:radial-gradient(closest-side, var(--glow), transparent 70%);pointer-events:none;transition:background .6s}
+.plate{
+  position:relative;width:min(240px, 64vw);aspect-ratio:1;max-width:100%;
+  background:linear-gradient(160deg, var(--plate-edge), var(--plate) 40%);
+  border:1px solid var(--plate-edge);border-radius:20px;padding:22px;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.6);
+  transition:background .5s, border-color .5s, box-shadow .5s;
+}
+[data-light="on"] .plate{box-shadow:0 1px 0 #fff inset, 0 30px 60px -32px rgba(40,40,50,.28)}
+.rocker{all:unset;cursor:pointer;display:block;width:100%;height:100%;position:relative;border-radius:12px;-webkit-tap-highlight-color:transparent}
+.rocker:focus-visible{outline:2px solid var(--accent);outline-offset:6px}
+.paddle{
+  position:absolute;inset:0;border-radius:12px;
+  background:linear-gradient(180deg, var(--rocker-hi), var(--rocker) 50%, var(--rocker-hi));
+  border:1px solid var(--plate-edge);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 14px 22px -14px rgba(0,0,0,.7);
+  transition:transform .16s var(--ease), background .5s, box-shadow .16s var(--ease);
+}
+[data-light="on"] .paddle{box-shadow:0 1px 0 #fff inset, 0 14px 22px -16px rgba(40,40,50,.3)}
+.rocker:active .paddle,.rocker.is-down .paddle{
+  transform:scale(.965);
+  box-shadow:0 6px 14px -8px rgba(0,0,0,.45) inset, 0 4px 8px -6px rgba(0,0,0,.4);
+  transition-duration:.07s;
+}
+.led{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:16px;height:4px;border-radius:2px;background:var(--accent);box-shadow:0 0 12px 2px var(--accent);transition:opacity .3s, box-shadow .3s}
+.rocker[aria-pressed="true"] .led{opacity:.18;box-shadow:none}
+
+/* Sections */
+section{padding-block:80px;border-top:1px solid var(--line);transition:border-color .5s}
+h2{font:700 clamp(1.6rem, 3vw, 2.2rem)/1.2 var(--font);letter-spacing:-.02em;color:var(--fg-strong);margin:0 0 12px}
+#services h2{margin-bottom:40px}
+
+.services{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:48px 40px}
+.service{min-width:0}
+.service h3{font:700 1.1rem/1.3 var(--font);color:var(--fg-strong);margin:0 0 8px}
+.service .icon{display:block;color:var(--accent);margin-bottom:14px;transition:color .5s}
+.service p{margin:0}
+
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start}
+.contact-intro p{margin:0;max-width:30em}
+.details{display:grid;gap:24px;margin:0}
+.details div{min-width:0}
+.details dt{font:600 .95rem/1.4 var(--font);color:var(--fg-strong);margin-bottom:2px}
+.details dd{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;overflow-wrap:anywhere}
+.details .value{user-select:all}
+.details a.value{color:var(--fg-strong);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;user-select:text}
+.details a.value:hover{color:var(--accent)}
+.copy{all:unset;cursor:pointer;font:600 .85rem/1.3 var(--font);color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.copy:hover{color:var(--fg-strong)}
+.copy:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:28px 40px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+
+@media (max-width: 900px){
+  .services{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+@media (max-width: 760px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:40px;padding-block:24px 64px}
+  .switch-zone{order:-1}
+  .plate{width:min(190px, 56vw)}
+  .contact{grid-template-columns:minmax(0,1fr);gap:28px}
+  nav{gap:18px}
+}
+@media (max-width: 520px){
+  .services{grid-template-columns:minmax(0,1fr);gap:28px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:0s!important;animation-duration:0s!important}
+  html{scroll-behavior:auto}
+}
+
+/* Language toggle */
+.header-right{display:flex;align-items:center;flex-wrap:wrap;gap:12px 28px}
+.lang{display:flex;gap:2px}
+.lang button{all:unset;cursor:pointer;font:600 .85rem/1 var(--font);color:var(--muted);padding:6px 7px;border-radius:4px;transition:color .2s}
+.lang button:hover{color:var(--fg-strong)}
+.lang button[aria-pressed="true"]{color:var(--fg-strong);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;text-decoration-color:var(--accent)}
+.lang button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+footer{align-items:center}
+.lang{gap:8px}
+.lang button{font-weight:400}
+.lang button[aria-pressed="true"]{font-weight:600}
+.lang-menu{position:relative}
+.lang-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font:600 .88rem/1 var(--font);color:var(--fg);padding:8px 10px;border:1px solid var(--line);border-radius:6px;transition:color .2s, border-color .2s}
+.lang-btn:hover,.lang-btn[aria-expanded="true"]{color:var(--fg-strong);border-color:var(--muted)}
+.lang-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lang-btn .chev{transition:transform .2s}
+.lang-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.lang-list{position:absolute;right:0;top:calc(100% + 6px);z-index:30;list-style:none;margin:0;padding:6px;min-width:160px;background:var(--bg);border:1px solid var(--line);border-radius:8px;box-shadow:0 14px 30px -12px rgba(0,0,0,.45)}
+.lang-list button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 10px;border-radius:5px;font:400 .92rem/1.2 var(--font);color:var(--fg)}
+.lang-list button:hover,.lang-list button:focus-visible{background:var(--surface);color:var(--fg-strong);outline:none}
+.lang-list button[aria-checked="true"]{font-weight:600;color:var(--fg-strong)}
+.lang-list button[aria-checked="true"]::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+@media (max-width: 480px){
+  header{flex-wrap:wrap}
+  .header-right{gap:8px 16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#top" aria-label="Logical Switch">
+      <span class="brand-mark" aria-hidden="true">0|1</span>
+      Logical Switch
+    </a>
+    <div class="header-right">
+      <nav aria-label="Main">
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="lang-menu">
+        <button type="button" class="lang-btn" id="lang-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lang-list" data-i18n-label="lang.label" aria-label="Language">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z"/></svg>
+          <span id="lang-current">EN</span>
+          <svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+        </button>
+        <ul class="lang-list" id="lang-list" role="menu" hidden>
+          <li role="none"><button type="button" role="menuitemradio" data-lang="en" lang="en" aria-checked="true">English</button></li>
+          <li role="none"><button type="button" role="menuitemradio" data-lang="fr" lang="fr" aria-checked="false">Français</button></li>
+          <li role="none"><button type="button" role="menuitemradio" data-lang="nl" lang="nl" aria-checked="false">Nederlands</button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <h1 aria-live="polite">
+          <span class="state" data-when="off" data-i18n="hero.off">Electricity, home automation and IT</span>
+          <span class="state" data-when="on" data-i18n="hero.on" hidden>What will be your next automation?</span>
+        </h1>
+        <p class="lede" data-i18n="hero.lede">Logical Switch designs and installs electrical systems and home automation for homes in and around Brussels, and also provides software and IT solutions.</p>
+        <div class="actions">
+          <a class="btn" href="#contact" data-i18n="hero.cta">Contact us</a>
+        </div>
+      </div>
+
+      <div class="switch-zone">
+        <div class="plate">
+          <button class="rocker" id="switch" type="button" aria-pressed="false" data-i18n-label="switch.label" aria-label="Light switch">
+            <span class="paddle" aria-hidden="true">
+              <span class="led"></span>
+            </span>
+          </button>
+        </div>
+        <p class="hint" id="hint">Press the button to turn on the light.</p>
+      </div>
+    </div>
+
+    <section id="services" aria-labelledby="services-title">
+      <h2 id="services-title" data-i18n="services.title">Services</h2>
+      <div class="services">
+        <article class="service">
+          <svg class="icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          <h3 data-i18n="s1.title">Electrical installation</h3>
+          <p data-i18n="s1.text">Modernising your existing installation or a completely new one, with wired or radio-frequency solutions, carried out in line with the AREI/RGIE.</p>
+        </article>
+        <article class="service">
+          <svg class="icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8.5" y="6.5" width="7" height="11" rx="1"/><path d="M12 10v4"/></svg>
+          <h3 data-i18n="s2.title">KNX and Niko Home Control</h3>
+          <p data-i18n="s2.text">Control of lighting, shutters and heating with KNX or Niko Home Control, including dimmable LED and DALI lighting with scenes and presence detection, from design to commissioning.</p>
+        </article>
+        <article class="service">
+          <svg class="icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9.5 15.5a3.5 3.5 0 0 1 5 0"/><path d="M12 18h.01"/></svg>
+          <h3 data-i18n="s3.title">Smart home integration</h3>
+          <p data-i18n="s3.text">Home Assistant setup that brings your devices together in one app, running locally in your home.</p>
+        </article>
+        <article class="service">
+          <svg class="icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg>
+          <h3 data-i18n="s4.title">Software development</h3>
+          <p data-i18n="s4.text">Custom applications, websites and integrations that connect your systems, built around the way you work.</p>
+        </article>
+        <article class="service">
+          <svg class="icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M2 19h20"/><path d="M9 19l.5-4h5l.5 4"/></svg>
+          <h3 data-i18n="s5.title">IT and computers</h3>
+          <p data-i18n="s5.text">Computer repairs, home and office networks, Wi-Fi, security and backups, plus honest advice before you buy.</p>
+        </article>
+        <article class="service">
+          <svg class="icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h4v3a2 2 0 1 0 4 0V3h0a1 1 0 0 1 1 1v5h-3a2 2 0 1 0 0 4h3v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-6h3a2 2 0 1 0 0-4H5V4a1 1 0 0 1 1-1z"/></svg>
+          <h3 data-i18n="s6.title">Custom solutions</h3>
+          <p data-i18n="s6.text">We listen to your needs and your budget, and work with you as partners to design a solution that fits your home or business.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="contact">
+        <div class="contact-intro">
+          <h2 id="contact-title" data-i18n="contact.title">Contact</h2>
+          <p data-i18n="contact.text">Tell us about your project and we will get back to you within two working days.</p>
+        </div>
+        <dl class="details">
+          <div>
+            <dt data-i18n="contact.email">Email</dt>
+            <dd><a class="value" id="email" href="mailto:contact@logicalswitch.be">contact@logicalswitch.be</a><button class="copy" type="button" data-copy="email" data-i18n="copy">Copy</button></dd>
+          </div>
+          <div>
+            <dt data-i18n="contact.phone">Phone</dt>
+            <dd data-i18n="contact.companyValue">Coming soon</dd>
+          </div>
+          <div>
+            <dt data-i18n="contact.area">Service area</dt>
+            <dd data-i18n="contact.areaValue">In and around Brussels</dd>
+          </div>
+          <div>
+            <dt data-i18n="contact.company">Company number</dt>
+            <dd data-i18n="contact.companyValue">Coming soon</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Logical Switch</span>
+    <div class="lang" role="group" data-i18n-label="lang.label" aria-label="Language">
+      <button type="button" data-lang="en" lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="fr" lang="fr" aria-pressed="false">Français</button>
+      <button type="button" data-lang="nl" lang="nl" aria-pressed="false">Nederlands</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var I18N = {
+    en: {
+      'title': 'Logical Switch | Electricity, home automation and IT',
+      'lang.label': 'Language',
+      'nav.services': 'Services',
+      'nav.contact': 'Contact',
+      'hero.off': 'Electricity, home automation and IT',
+      'hero.on': 'What will be your next automation?',
+      'hero.lede': 'Logical Switch designs and installs electrical systems and home automation for homes in and around Brussels, and also provides software and IT solutions.',
+      'hero.cta': 'Contact us',
+      'hint.off': 'Press the button to turn on the light.',
+      'hint.on': 'Press the button again to turn it off.',
+      'switch.label': 'Light switch',
+      'services.title': 'Services',
+      's1.title': 'Electrical installation',
+      's1.text': 'Modernising your existing installation or a completely new one, with wired or radio-frequency solutions, carried out in line with the AREI/RGIE.',
+      's2.title': 'KNX and Niko Home Control',
+      's2.text': 'Control of lighting, shutters and heating with KNX or Niko Home Control, including dimmable LED and DALI lighting with scenes and presence detection, from design to commissioning.',
+      's3.title': 'Smart home integration',
+      's3.text': 'Home Assistant setup that brings your devices together in one app, running locally in your home.',
+      's4.title': 'Software development',
+      's4.text': 'Custom applications, websites and integrations that connect your systems, built around the way you work.',
+      's5.title': 'IT and computers',
+      's5.text': 'Computer repairs, home and office networks, Wi-Fi, security and backups, plus honest advice before you buy.',
+      's6.title': 'Custom solutions',
+      's6.text': 'We listen to your needs and your budget, and work with you as partners to design a solution that fits your home or business.',
+      'contact.title': 'Contact',
+      'contact.text': 'Tell us about your project and we will get back to you within two working days.',
+      'contact.email': 'Email',
+      'contact.phone': 'Phone',
+      'contact.area': 'Service area',
+      'contact.areaValue': 'In and around Brussels',
+      'contact.company': 'Company number',
+      'contact.companyValue': 'Coming soon',
+      'copy': 'Copy', 'copied': 'Copied', 'selected': 'Selected'
+    },
+    fr: {
+      'title': 'Logical Switch | Électricité, domotique et informatique',
+      'lang.label': 'Langue',
+      'nav.services': 'Services',
+      'nav.contact': 'Contact',
+      'hero.off': 'Électricité, domotique et informatique',
+      'hero.on': 'Quelle sera votre prochaine automatisation ?',
+      'hero.lede': 'Logical Switch conçoit et installe des systèmes électriques et domotiques pour les habitations à Bruxelles et dans ses environs, et propose aussi des solutions logicielles et informatiques.',
+      'hero.cta': 'Contactez-nous',
+      'hint.off': 'Appuyez sur le bouton pour allumer la lumière.',
+      'hint.on': 'Appuyez à nouveau pour l’éteindre.',
+      'switch.label': 'Interrupteur',
+      'services.title': 'Services',
+      's1.title': 'Installation électrique',
+      's1.text': 'Modernisation de votre installation existante ou installation entièrement nouvelle, en solutions filaires ou radiofréquence, conformément au RGIE.',
+      's2.title': 'KNX et Niko Home Control',
+      's2.text': 'Commande de l’éclairage, des volets et du chauffage avec KNX ou Niko Home Control, y compris l’éclairage LED dimmable et DALI avec scènes et détection de présence, de la conception à la mise en service.',
+      's3.title': 'Intégration domotique',
+      's3.text': 'Configuration de Home Assistant pour réunir vos appareils dans une seule application, qui fonctionne en local chez vous.',
+      's4.title': 'Développement logiciel',
+      's4.text': 'Applications, sites web et intégrations sur mesure qui relient vos systèmes, conçus selon votre façon de travailler.',
+      's5.title': 'Informatique',
+      's5.text': 'Réparation d’ordinateurs, réseaux à la maison et au bureau, Wi-Fi, sécurité et sauvegardes, et des conseils honnêtes avant vos achats.',
+      's6.title': 'Solutions sur mesure',
+      's6.text': 'Nous écoutons vos besoins et votre budget, et travaillons avec vous en partenaires pour concevoir une solution adaptée à votre habitation ou à votre entreprise.',
+      'contact.title': 'Contact',
+      'contact.text': 'Parlez-nous de votre projet et nous vous répondrons dans les deux jours ouvrables.',
+      'contact.email': 'E-mail',
+      'contact.phone': 'Téléphone',
+      'contact.area': 'Zone d’intervention',
+      'contact.areaValue': 'Bruxelles et environs',
+      'contact.company': 'Numéro d’entreprise',
+      'contact.companyValue': 'Bientôt disponible',
+      'copy': 'Copier', 'copied': 'Copié', 'selected': 'Sélectionné'
+    },
+    nl: {
+      'title': 'Logical Switch | Elektriciteit, domotica en IT',
+      'lang.label': 'Taal',
+      'nav.services': 'Diensten',
+      'nav.contact': 'Contact',
+      'hero.off': 'Elektriciteit, domotica en IT',
+      'hero.on': 'Wat wordt uw volgende automatisering?',
+      'hero.lede': 'Logical Switch ontwerpt en installeert elektrische installaties en domotica voor woningen in en rond Brussel, en biedt ook software- en IT-oplossingen.',
+      'hero.cta': 'Neem contact op',
+      'hint.off': 'Druk op de knop om het licht aan te doen.',
+      'hint.on': 'Druk opnieuw om het licht uit te doen.',
+      'switch.label': 'Lichtschakelaar',
+      'services.title': 'Diensten',
+      's1.title': 'Elektrische installatie',
+      's1.text': 'Modernisering van uw bestaande installatie of een volledig nieuwe, met bekabelde of draadloze (radiofrequentie) oplossingen, conform het AREI.',
+      's2.title': 'KNX en Niko Home Control',
+      's2.text': 'Sturing van verlichting, rolluiken en verwarming met KNX of Niko Home Control, inclusief dimbare led- en DALI-verlichting met scènes en aanwezigheidsdetectie, van ontwerp tot inbedrijfstelling.',
+      's3.title': 'Smart home-integratie',
+      's3.text': 'Installatie van Home Assistant die al uw toestellen samenbrengt in één app, die lokaal bij u thuis draait.',
+      's4.title': 'Softwareontwikkeling',
+      's4.text': 'Applicaties, websites en integraties op maat die uw systemen verbinden, afgestemd op hoe u werkt.',
+      's5.title': 'IT en computers',
+      's5.text': 'Computerherstellingen, netwerken thuis en op kantoor, wifi, beveiliging en back-ups, en eerlijk advies voordat u iets koopt.',
+      's6.title': 'Oplossingen op maat',
+      's6.text': 'We luisteren naar uw noden en uw budget, en werken als partners samen met u een oplossing uit die past bij uw woning of bedrijf.',
+      'contact.title': 'Contact',
+      'contact.text': 'Vertel ons over uw project en we antwoorden binnen twee werkdagen.',
+      'contact.email': 'E-mail',
+      'contact.phone': 'Telefoon',
+      'contact.area': 'Werkgebied',
+      'contact.areaValue': 'In en rond Brussel',
+      'contact.company': 'Ondernemingsnummer',
+      'contact.companyValue': 'Binnenkort beschikbaar',
+      'copy': 'Kopiëren', 'copied': 'Gekopieerd', 'selected': 'Geselecteerd'
+    }
+  };
+
+  var root = document.documentElement;
+  var btn = document.getElementById('switch');
+  var hint = document.getElementById('hint');
+  var states = document.querySelectorAll('h1 .state');
+  var lang = 'en';
+  root.dataset.light = 'off';
+
+  function t(key){ return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || ''; }
+
+  // Saved choice wins; otherwise the first supported browser language; otherwise English.
+  function detectLang(){
+    try { var saved = localStorage.getItem('ls-lang'); if (I18N[saved]) return saved; } catch(e){}
+    var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en'];
+    for (var i = 0; i < list.length; i++){
+      var code = String(list[i] || '').slice(0, 2).toLowerCase();
+      if (I18N[code]) return code;
+    }
+    return 'en';
+  }
+
+  function setLang(code, remember){
+    lang = I18N[code] ? code : 'en';
+    root.lang = lang;
+    document.title = t('title');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-label]').forEach(function(el){ el.setAttribute('aria-label', t(el.dataset.i18nLabel)); });
+    document.querySelectorAll('.lang button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    document.querySelectorAll('.lang-list button').forEach(function(b){ b.setAttribute('aria-checked', String(b.dataset.lang === lang)); });
+    document.getElementById('lang-current').textContent = lang.toUpperCase();
+    hint.textContent = t(root.dataset.light === 'on' ? 'hint.on' : 'hint.off');
+    if (remember){ try { localStorage.setItem('ls-lang', lang); } catch(e){} }
+  }
+
+  document.querySelectorAll('.lang button').forEach(function(b){
+    b.addEventListener('click', function(){ setLang(b.dataset.lang, true); });
+  });
+
+  // Header dropdown
+  var langBtn = document.getElementById('lang-btn');
+  var langList = document.getElementById('lang-list');
+  var items = Array.prototype.slice.call(langList.querySelectorAll('button'));
+  function openMenu(focusCurrent){
+    langList.hidden = false; langBtn.setAttribute('aria-expanded', 'true');
+    if (focusCurrent){ var cur = langList.querySelector('[aria-checked="true"]') || items[0]; cur.focus(); }
+  }
+  function closeMenu(returnFocus){
+    langList.hidden = true; langBtn.setAttribute('aria-expanded', 'false');
+    if (returnFocus) langBtn.focus();
+  }
+  langBtn.addEventListener('click', function(e){
+    if (langList.hidden) openMenu(e.detail === 0); else closeMenu(false);
+  });
+  langBtn.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowDown'){ e.preventDefault(); openMenu(true); }
+  });
+  items.forEach(function(b, i){
+    b.addEventListener('click', function(){ setLang(b.dataset.lang, true); closeMenu(true); });
+    b.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowDown'){ e.preventDefault(); items[(i + 1) % items.length].focus(); }
+      else if (e.key === 'ArrowUp'){ e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+      else if (e.key === 'Escape'){ closeMenu(true); }
+      else if (e.key === 'Tab'){ closeMenu(false); }
+    });
+  });
+  document.addEventListener('click', function(e){
+    if (!langList.hidden && !e.target.closest('.lang-menu')) closeMenu(false);
+  });
+  setLang(detectLang(), false);
+
+  function applyTheme(on){
+    root.dataset.light = on ? 'on' : 'off';
+    hint.textContent = t(on ? 'hint.on' : 'hint.off');
+    states.forEach(function(s){ s.hidden = (s.dataset.when === 'on') !== on; });
+  }
+
+  var busy = false;
+  btn.addEventListener('click', function(){
+    if (busy) return;
+    var on = root.dataset.light !== 'on';
+    btn.setAttribute('aria-pressed', String(on));
+    btn.classList.add('is-down');
+    setTimeout(function(){ btn.classList.remove('is-down'); }, 140);
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!document.startViewTransition || reduce){ applyTheme(on); return; }
+
+    busy = true;
+    var r = btn.getBoundingClientRect();
+    var x = r.left + r.width / 2, y = r.top + r.height / 2;
+    var end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+    setTimeout(function(){
+      if (!on) root.classList.add('vt-off');
+      var vt;
+      try { vt = document.startViewTransition(function(){ applyTheme(on); }); }
+      catch(e){ applyTheme(on); root.classList.remove('vt-off'); busy = false; return; }
+      vt.ready.then(function(){
+        var small = 'circle(0px at ' + x + 'px ' + y + 'px)';
+        var big = 'circle(' + end + 'px at ' + x + 'px ' + y + 'px)';
+        root.animate(
+          { clipPath: on ? [small, big] : [big, small] },
+          { duration: on ? 750 : 450, easing: on ? 'cubic-bezier(.2,.7,.2,1)' : 'cubic-bezier(.5,0,.75,0)',
+            pseudoElement: on ? '::view-transition-new(root)' : '::view-transition-old(root)' }
+        );
+      }).catch(function(){});
+      vt.finished.finally(function(){ root.classList.remove('vt-off'); busy = false; });
+    }, 140);
+  });
+
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click', function(){
+      var el = document.getElementById(b.dataset.copy);
+      var text = el.textContent.trim();
+      function selectIt(){
+        var range = document.createRange(); range.selectNodeContents(el);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+        b.textContent = t('selected');
+      }
+      try { navigator.clipboard.writeText(text).then(function(){ b.textContent = t('copied'); }, selectIt); }
+      catch(e){ selectIt(); }
+      setTimeout(function(){ b.textContent = t('copy'); }, 1600);
+    });
+  });
+})();
+</script>
+</body>
+</html>
