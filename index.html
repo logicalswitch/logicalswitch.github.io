@@ -171,6 +171,8 @@ footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;paddin
 .lang button[aria-pressed="true"]{color:var(--fg-strong);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;text-decoration-color:var(--accent)}
 .lang button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 footer{align-items:center}
+.footer-brand{display:inline-flex;align-items:center;gap:10px}
+.footer-brand .brand-mark{color:var(--fg-strong);width:26px;height:26px;font-size:.62rem;border-radius:6px}
 .lang{gap:8px}
 .lang button{font-weight:400}
 .lang button[aria-pressed="true"]{font-weight:600}
@@ -308,7 +310,7 @@ footer{align-items:center}
   </main>
 
   <footer>
-    <span>© 2026 Logical Switch</span>
+    <span class="footer-brand"><span class="brand-mark" aria-hidden="true">0|1</span><span>Logical Switch</span></span>
     <div class="lang" role="group" data-i18n-label="lang.label" aria-label="Language">
       <button type="button" data-lang="en" lang="en" aria-pressed="true">English</button>
       <button type="button" data-lang="fr" lang="fr" aria-pressed="false">Français</button>
