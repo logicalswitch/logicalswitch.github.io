@@ -131,6 +131,24 @@ h2{font:700 clamp(1.6rem, 3vw, 2.2rem)/1.2 var(--font);letter-spacing:-.02em;col
 .service p{margin:0}
 .service p a{color:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px}
 .service p a:hover{color:var(--fg-strong)}
+/* Recent work carousel */
+.work-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px}
+.work-head h2{margin:0}
+.work-nav{display:flex;gap:8px}
+.work-nav button{all:unset;cursor:pointer;display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;color:var(--fg);transition:border-color .2s,color .2s,opacity .2s}
+.work-nav button:hover{border-color:var(--muted);color:var(--fg-strong)}
+.work-nav button:disabled{opacity:.35;cursor:default}
+.work-nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.work-track{display:flex;gap:32px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:6px;margin:0;list-style:none;padding-left:0;scrollbar-width:none}
+.work-track::-webkit-scrollbar{display:none}
+.work-item{flex:0 0 280px;min-width:0;scroll-snap-align:start;display:flex;flex-direction:column;gap:12px}
+.shot{position:relative;aspect-ratio:16/10;max-width:100%;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface);transition:background .5s,border-color .5s}
+.shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.work-item h3{font:700 1.05rem/1.3 var(--font);color:var(--fg-strong);margin:0}
+.work-item p{margin:0;font-size:.92rem;line-height:1.55}
+.work-item a{font-size:.9rem;font-weight:600;color:var(--fg);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;align-self:flex-start}
+.work-item a:hover{color:var(--fg-strong)}
+@media (max-width: 560px){ .work-item{flex-basis:240px} }
 
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start}
 .contact-intro p{margin:0;max-width:30em}
@@ -283,6 +301,36 @@ footer{align-items:center}
       </div>
     </section>
 
+    <section id="work" aria-labelledby="work-title">
+      <div class="work-head">
+        <h2 id="work-title" data-i18n="work.title">Recent work</h2>
+        <div class="work-nav">
+          <button type="button" id="work-prev" data-i18n-label="work.prev" aria-label="Previous"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+          <button type="button" id="work-next" data-i18n-label="work.next" aria-label="Next"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+        </div>
+      </div>
+      <ul class="work-track" id="work-track">
+        <li class="work-item">
+          <div class="shot"><img src="work/limajardins.webp" width="640" height="400" loading="lazy" alt="Homepage of the Lima Jardins website"></div>
+          <h3>Lima Jardins</h3>
+          <p data-i18n="w1.text"></p>
+          <a href="https://limajardins.be" target="_blank" rel="noopener" data-i18n="work.visit">Visit website</a>
+        </li>
+        <li class="work-item">
+          <div class="shot"><img src="work/villairmaverhuur.webp" width="640" height="400" loading="lazy" alt="Homepage of the Villa Irma Verhuur website"></div>
+          <h3>Villa Irma Verhuur</h3>
+          <p data-i18n="w2.text"></p>
+          <a href="https://villairmaverhuur.be" target="_blank" rel="noopener" data-i18n="work.visit">Visit website</a>
+        </li>
+        <li class="work-item">
+          <div class="shot"><img src="work/kinememling.webp" width="640" height="400" loading="lazy" alt="Homepage of the Kine Memling website"></div>
+          <h3>Kine Memling</h3>
+          <p data-i18n="w3.text"></p>
+          <a href="https://kinememling.be" target="_blank" rel="noopener" data-i18n="work.visit">Visit website</a>
+        </li>
+      </ul>
+    </section>
+
     <section id="contact" aria-labelledby="contact-title">
       <div class="contact">
         <div class="contact-intro">
@@ -349,6 +397,10 @@ footer{align-items:center}
       's5.text': 'Computer repairs, home and office networks, Wi-Fi, security and backups, plus honest advice before you buy.',
       's6.title': 'Custom solutions',
       's6.text': 'We listen to your needs and your budget, and work with you as partners to design a solution that fits your home or business.',
+      'work.title': 'Recent work', 'work.visit': 'Visit website', 'work.prev': 'Previous', 'work.next': 'Next',
+      'w1.text': 'Website for Les Jardins d’Eden, a gardening company: services, contact details and photos of finished gardens.',
+      'w2.text': 'Website for student rooms (koten) in Leuven, presenting each house with hand-drawn illustrations.',
+      'w3.text': 'Website for a physiotherapy practice, with a calm, simple design.',
       'contact.title': 'Contact',
       'contact.text': 'Tell us about your project and we will get back to you within two working days.',
       'contact.email': 'Email',
@@ -384,6 +436,10 @@ footer{align-items:center}
       's5.text': 'Réparation d’ordinateurs, réseaux à la maison et au bureau, Wi-Fi, sécurité et sauvegardes, et des conseils honnêtes avant vos achats.',
       's6.title': 'Solutions sur mesure',
       's6.text': 'Nous écoutons vos besoins et votre budget, et travaillons avec vous en partenaires pour concevoir une solution adaptée à votre habitation ou à votre entreprise.',
+      'work.title': 'Réalisations', 'work.visit': 'Voir le site', 'work.prev': 'Précédent', 'work.next': 'Suivant',
+      'w1.text': 'Site des Jardins d’Eden, une entreprise de jardinage : services, coordonnées et photos de jardins réalisés.',
+      'w2.text': 'Site de location de kots pour étudiants à Louvain, qui présente chaque maison avec des illustrations dessinées à la main.',
+      'w3.text': 'Site d’un cabinet de kinésithérapie, au design calme et épuré.',
       'contact.title': 'Contact',
       'contact.text': 'Parlez-nous de votre projet et nous vous répondrons dans les deux jours ouvrables.',
       'contact.email': 'E-mail',
@@ -419,6 +475,10 @@ footer{align-items:center}
       's5.text': 'Computerherstellingen, netwerken thuis en op kantoor, wifi, beveiliging en back-ups, en eerlijk advies voordat u iets koopt.',
       's6.title': 'Oplossingen op maat',
       's6.text': 'We luisteren naar uw noden en uw budget, en werken als partners samen met u een oplossing uit die past bij uw woning of bedrijf.',
+      'work.title': 'Realisaties', 'work.visit': 'Bekijk de website', 'work.prev': 'Vorige', 'work.next': 'Volgende',
+      'w1.text': 'Website voor Les Jardins d’Eden, een tuinbedrijf: diensten, contactgegevens en foto’s van afgewerkte tuinen.',
+      'w2.text': 'Website voor studentenkoten in Leuven, die elk huis voorstelt met handgetekende illustraties.',
+      'w3.text': 'Website voor een kinesitherapiepraktijk, met een rustig en eenvoudig ontwerp.',
       'contact.title': 'Contact',
       'contact.text': 'Vertel ons over uw project en we antwoorden binnen twee werkdagen.',
       'contact.email': 'E-mail',
@@ -467,6 +527,34 @@ footer{align-items:center}
   document.querySelectorAll('.lang button').forEach(function(b){
     b.addEventListener('click', function(){ setLang(b.dataset.lang, true); });
   });
+
+  // Recent work carousel
+  var track = document.getElementById('work-track');
+  var prev = document.getElementById('work-prev');
+  var next = document.getElementById('work-next');
+  // Show the projects in a random order on every load
+  var items = Array.prototype.slice.call(track.children);
+  for (var i = items.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = items[i]; items[i] = items[j]; items[j] = tmp;
+  }
+  items.forEach(function(li){ track.appendChild(li); });
+  // Show the projects in a random order on each visit
+  var works = Array.prototype.slice.call(track.children);
+  for (var i = works.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var tmp = works[i]; works[i] = works[j]; works[j] = tmp; }
+  works.forEach(function(li){ track.appendChild(li); });
+  function step(){ var it = track.querySelector('.work-item'); return it ? it.getBoundingClientRect().width + 32 : track.clientWidth; }
+  function updateNav(){
+    var max = track.scrollWidth - track.clientWidth - 4;
+    prev.disabled = track.scrollLeft <= 2;
+    next.disabled = track.scrollLeft >= max;
+    prev.parentElement.hidden = max <= 0;
+  }
+  prev.addEventListener('click', function(){ track.scrollBy({left: -step()}); });
+  next.addEventListener('click', function(){ track.scrollBy({left: step()}); });
+  track.addEventListener('scroll', updateNav, {passive: true});
+  window.addEventListener('resize', updateNav);
+  updateNav();
 
   // Header dropdown
   var langBtn = document.getElementById('lang-btn');
